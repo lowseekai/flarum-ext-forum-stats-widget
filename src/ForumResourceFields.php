@@ -315,10 +315,10 @@ class ForumResourceFields
     {
         $ignorePrivate = (bool) $this->settings->get('ekumanov-forum-widgets.ignore_private_discussions', false);
 
-        // Only count users who have confirmed their email. An unconfirmed
-        // registration is provisional (and frequently spam or abandoned), so it
-        // should neither inflate the user count nor surface as the "latest
-        // registration". Mirrors core's own gate for a real, activated account.
+        // Keep the latest-registration card limited to confirmed accounts.
+        // The aggregate user count below intentionally includes every account:
+        // it represents the forum's total registered-user count, not only
+        // activated accounts.
         $latestUser = User::query()
             ->where('is_email_confirmed', true)
             ->orderBy('joined_at', 'desc')
@@ -329,7 +329,7 @@ class ForumResourceFields
                 ? Discussion::query()->where('is_private', false)->count()
                 : Discussion::query()->count(),
             'post_count' => CommentPost::query()->count(),
-            'user_count' => User::query()->where('is_email_confirmed', true)->count(),
+            'user_count' => User::query()->count(),
             'latest_user' => $latestUser ? $latestUser->getAttributes() : null,
         ];
     }
