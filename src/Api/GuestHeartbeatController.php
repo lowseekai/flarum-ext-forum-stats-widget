@@ -140,7 +140,7 @@ class GuestHeartbeatController implements RequestHandlerInterface
         $rlKey = 'ekumanov-forum-widgets.guest-rl.' . hash('sha256', $ip);
         $count = (int) $this->cache->get($rlKey, 0);
         if ($count >= self::RATE_LIMIT_PER_MIN) {
-            return new EmptyResponse(429);
+            return new EmptyResponse(204);
         }
         $this->cache->put($rlKey, $count + 1, 60);
 

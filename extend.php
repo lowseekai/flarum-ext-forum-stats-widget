@@ -58,6 +58,11 @@ return [
     (new Extend\Csrf())
         ->exemptRoute('forum-widgets.guest-heartbeat'),
 
+    (new Extend\ThrottleApi())
+        ->set('ekumanovForumWidgetsGuestHeartbeatBypass', function ($request) {
+            return $request->getAttribute('routeName') === 'forum-widgets.guest-heartbeat' ? false : null;
+        }),
+
     (new Extend\Event())
         ->subscribe(Listener\FlushCaches::class),
 ];

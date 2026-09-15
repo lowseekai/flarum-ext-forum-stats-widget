@@ -201,7 +201,7 @@ namespace Test {
     for ($i = 0; $i < 9; $i++) {
         $codes[] = $ctl3->handle(new FakeRequest($realUA, '198.51.100.77'))->getStatusCode();
     }
-    check('six accepted, then 429', $codes, [204, 204, 204, 204, 204, 204, 429, 429, 429]);
+    check('six accepted, then silently ignored', $codes, [204, 204, 204, 204, 204, 204, 204, 204, 204]);
 
     printf("\n%d passed, %d failed\n\n", $pass, $fail);
     exit($fail === 0 ? 0 : 1);
