@@ -306,9 +306,17 @@ class CompactForumWidget extends Component {
         // noTooltip: suppress the tooltip explicitly (e.g. online stat on mobile, where tapping
         // the cell expands the panel and a tooltip would flicker on touch).
         const buildStat = (icon, value, tooltipKey, labelKey, extraClass, noTooltip) => {
-            const inlineLabel = app.translator.trans(labelKey, { count: value });
+            const valueText = formatNumber(value);
+            const translatedLabel = extractText(app.translator.trans(labelKey, { count: value })).trim();
+            // Some language packs include the count in the label (for example,
+            // "{count} 用户"), while the widget already renders the count in its
+            // own element. Remove that duplicated leading count for display and
+            // accessibility text without changing labels that only contain text.
+            const inlineLabel = translatedLabel.startsWith(valueText)
+                ? translatedLabel.slice(valueText.length).trim()
+                : translatedLabel;
             const tooltipText = app.translator.trans(tooltipKey);
-            const accessibleLabel = formatNumber(value) + ' ' + inlineLabel;
+            const accessibleLabel = valueText + ' ' + inlineLabel;
             const useTooltip = !noTooltip && !isDesktopFullWidth;
             const statEl = m('span.CompactWidget-stat' + (extraClass || ''), {
                 'aria-label': accessibleLabel,
